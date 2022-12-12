@@ -1,7 +1,11 @@
-import { Home } from './home'
+import { Ping } from './ping'
+import { Auth } from './auth'
+import { Me } from './me'
 
 const Client = {
-  home: Home,
+  ping: Ping,
+  auth: Auth,
+  me: Me,
 }
 
 export default Client

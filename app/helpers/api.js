@@ -1,6 +1,7 @@
 import Auth from '../storage/auth'
 import { isEmpty } from 'ramda'
 import queryString from 'query-string'
+import { navigate } from './navigation'
 
 const API_URL = 'http://127.0.0.1:3000'
 
@@ -13,13 +14,17 @@ const url = (path, method, params = {}) => {
   return `${API_URL}/${path}`
 }
 
-const requestOptions = (method, params, authToken) => {
+const requestOptions = (method, params, authCredentials) => {
   const options = {
     method: method,
     headers: {
-      Accept: 'application/json',
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${authToken}` || '',
+      'token-type': 'Bearer',
+      'client': authCredentials.client,
+      'expiry': authCredentials.expiry,
+      'uid': authCredentials.uid,
+      'access-token': authCredentials.accessToken
     },
   }
 
@@ -31,14 +36,14 @@ const requestOptions = (method, params, authToken) => {
 }
 
 const handle401 = () => {
-  console.log('401')
+  navigate('SignIn')
 }
 
 const makeRequestWithPromise = async (method, path, params) => {
   return new Promise(async function (resolve, reject) {
     try {
-      const authToken = await Auth.getToken()
-      const response = await fetch(url(path, method, params), requestOptions(method, params, authToken))
+      const authCredentials = await Auth.getCredentials()
+      const response = await fetch(url(path, method, params), requestOptions(method, params, authCredentials))
 
       if (response.status == 401) {
         handle401()
@@ -50,13 +55,7 @@ const makeRequestWithPromise = async (method, path, params) => {
       } else {
         const data = await response.json()
 
-        if (data.success == undefined) {
-          resolve(data)
-        } else if (data.success) {
-          resolve(data.response)
-        } else {
-          reject({ type: 'fail', ...data })
-        }
+        resolve({data: data, headers: response.headers, status: 'ok'})
       }
     } catch (error) {
       reject({ type: 'error', ...error })
