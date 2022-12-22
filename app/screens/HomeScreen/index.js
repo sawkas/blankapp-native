@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button } from 'react-native'
 
-import Client from '../../client';
-import { UserContext } from '../../contexts/UserContext';
-import Auth from '../../storage/auth';
+import Client from '../../client'
+import { UserContext } from '../../contexts/UserContext'
+import Auth from '../../storage/auth'
 
-function HomeScreen({ navigation }) {
-  const {user, setUser, userId, setUserId} = useContext(UserContext)
+function HomeScreen ({ navigation }) {
+  const { user, setUser, userId, setUserId } = useContext(UserContext)
 
   const fetchMe = async () => {
     const { data } = await Client.me.index()
@@ -31,7 +31,7 @@ function HomeScreen({ navigation }) {
       <Text>Hello {user.full_name}</Text>
       <Button title="Sign out" onPress={signOut} />
     </View>
-  );
+  )
 }
 
-export default HomeScreen;
+export default HomeScreen

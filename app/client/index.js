@@ -5,7 +5,7 @@ import { Me } from './me'
 const Client = {
   ping: Ping,
   auth: Auth,
-  me: Me,
+  me: Me
 }
 
 export default Client

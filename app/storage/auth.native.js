@@ -10,8 +10,8 @@ Auth.getCredentials = async () => {
   } catch (error) { return {} }
 }
 
-Auth.setCredentials = async ({client, expiry, uid, accessToken}) => {
-  await SecureStore.setItemAsync(CREDENTIALS_KEY, JSON.stringify({client, expiry, uid, accessToken}))
+Auth.setCredentials = async ({ client, expiry, uid, accessToken }) => {
+  await SecureStore.setItemAsync(CREDENTIALS_KEY, JSON.stringify({ client, expiry, uid, accessToken }))
 }
 
 Auth.removeCredentials = async () => {

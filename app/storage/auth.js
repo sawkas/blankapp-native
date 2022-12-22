@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Auth = {}
 
@@ -10,8 +10,8 @@ Auth.getCredentials = async () => {
   } catch (error) { return {} }
 }
 
-Auth.setCredentials = async ({client, expiry, uid, accessToken}) => {
-  return await AsyncStorage.setItem(CREDENTIALS_KEY, JSON.stringify({client, expiry, uid, accessToken}))
+Auth.setCredentials = async ({ client, expiry, uid, accessToken }) => {
+  return await AsyncStorage.setItem(CREDENTIALS_KEY, JSON.stringify({ client, expiry, uid, accessToken }))
 }
 
 Auth.removeCredentials = async () => {

@@ -3,7 +3,7 @@ import { isEmpty } from 'ramda'
 import queryString from 'query-string'
 import { navigate } from './navigation'
 
-const API_URL = 'http://127.0.0.1:3000'
+import { API_URL } from '@env'
 
 const url = (path, method, params = {}) => {
   if (method === 'GET' && !isEmpty(params)) {
@@ -16,20 +16,20 @@ const url = (path, method, params = {}) => {
 
 const requestOptions = (method, params, authCredentials) => {
   const options = {
-    method: method,
+    method,
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
       'token-type': 'Bearer',
-      'client': authCredentials.client,
-      'expiry': authCredentials.expiry,
-      'uid': authCredentials.uid,
+      client: authCredentials.client,
+      expiry: authCredentials.expiry,
+      uid: authCredentials.uid,
       'access-token': authCredentials.accessToken
-    },
+    }
   }
 
-  if ((method == 'POST' || method == 'PATCH') && params) {
-    options['body'] = JSON.stringify(params)
+  if ((method === 'POST' || method === 'PATCH') && params) {
+    options.body = JSON.stringify(params)
   }
 
   return options
@@ -55,7 +55,7 @@ const makeRequestWithPromise = async (method, path, params) => {
       } else {
         const data = await response.json()
 
-        resolve({data: data, headers: response.headers, status: 'ok'})
+        resolve({ data, headers: response.headers, status: 'ok' })
       }
     } catch (error) {
       reject({ type: 'error', ...error })
@@ -67,5 +67,5 @@ export default {
   getWithPromise: (path, params) => makeRequestWithPromise('GET', path, params),
   postWithPromise: (path, params) => makeRequestWithPromise('POST', path, params),
   patchWithPromise: (path, params) => makeRequestWithPromise('PATCH', path, params),
-  deleteWithPromise: (path) => makeRequestWithPromise('DELETE', path, {}),
+  deleteWithPromise: (path) => makeRequestWithPromise('DELETE', path, {})
 }
