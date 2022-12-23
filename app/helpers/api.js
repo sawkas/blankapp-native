@@ -1,9 +1,9 @@
-import Auth from '../storage/auth'
 import { isEmpty } from 'ramda'
 import queryString from 'query-string'
-import { navigate } from './navigation'
 
 import { API_URL } from '@env'
+import Auth from '../storage/auth'
+import { navigate } from './navigation'
 
 const url = (path, method, params = {}) => {
   if (method === 'GET' && !isEmpty(params)) {
@@ -14,17 +14,13 @@ const url = (path, method, params = {}) => {
   return `${API_URL}/${path}`
 }
 
-const requestOptions = (method, params, authCredentials) => {
+const requestOptions = (method, params, authToken) => {
   const options = {
     method,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      'token-type': 'Bearer',
-      client: authCredentials.client,
-      expiry: authCredentials.expiry,
-      uid: authCredentials.uid,
-      'access-token': authCredentials.accessToken
+      Authorization: `Bearer ${authToken}`
     }
   }
 
@@ -42,8 +38,8 @@ const handle401 = () => {
 const makeRequestWithPromise = async (method, path, params) => {
   return new Promise(async function (resolve, reject) {
     try {
-      const authCredentials = await Auth.getCredentials()
-      const response = await fetch(url(path, method, params), requestOptions(method, params, authCredentials))
+      const authToken = await Auth.getToken()
+      const response = await fetch(url(path, method, params), requestOptions(method, params, authToken))
 
       if (response.status == 401) {
         handle401()

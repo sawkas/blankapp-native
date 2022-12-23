@@ -2,20 +2,20 @@ import * as SecureStore from 'expo-secure-store'
 
 const Auth = {}
 
-export const CREDENTIALS_KEY = 'AUTH_CREDENTIALS'
+export const TOKEN_KEY = 'AUTH_TOKEN'
 
-Auth.getCredentials = async () => {
+Auth.getToken = async () => {
   try {
-    return await SecureStore.getItemAsync(CREDENTIALS_KEY).then((value) => value ? JSON.parse(value) : {})
+    return await SecureStore.getItemAsync(TOKEN_KEY)
   } catch (error) { return {} }
 }
 
-Auth.setCredentials = async ({ client, expiry, uid, accessToken }) => {
-  await SecureStore.setItemAsync(CREDENTIALS_KEY, JSON.stringify({ client, expiry, uid, accessToken }))
+Auth.setToken = async (token) => {
+  await SecureStore.setItemAsync(TOKEN_KEY, token)
 }
 
-Auth.removeCredentials = async () => {
-  await SecureStore.deleteItemAsync(CREDENTIALS_KEY)
+Auth.removeToken = async () => {
+  await SecureStore.deleteItemAsync(TOKEN_KEY)
 }
 
 export default Auth

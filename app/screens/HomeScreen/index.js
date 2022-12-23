@@ -19,9 +19,8 @@ function HomeScreen ({ navigation }) {
   }, [userId])
 
   const signOut = async () => {
-    const res = await Client.auth.signOut()
+    Auth.removeToken()
 
-    Auth.removeCredentials()
     setUserId(null)
   }
 

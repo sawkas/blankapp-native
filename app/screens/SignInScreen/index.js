@@ -1,16 +1,17 @@
-import { GOOGLE_WEB_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from '@env'
 import React, { useContext, useEffect, useState } from 'react'
+import { GOOGLE_WEB_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from '@env'
 import {
-  Button, SafeAreaView, StyleSheet, TextInput, Text
+  Button, SafeAreaView, View, StyleSheet, TextInput, Text
 } from 'react-native'
 
 import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-google-signin/google-signin'
 import Client from '../../client'
+
 import { UserContext } from '../../contexts/UserContext'
+
 import Auth from '../../storage/auth'
 
 function SignInScreen ({ navigation }) {
-  const [credentionals, setCredentionals] = useState({ email: '', password: '' })
   const { setUserId } = useContext(UserContext)
 
   useEffect(() => {
@@ -44,55 +45,18 @@ function SignInScreen ({ navigation }) {
   }
 
   const googleSignIn = async (idToken) => {
-    const res = await Client.auth.googleSignIn({ id_token: idToken })
+    const { data } = await Client.auth.googleSignIn({ id_token: idToken })
 
-    setUserId(res.headers.get('uid'))
+    setUserId(data.user_id)
 
-    await Auth.setCredentials({
-      client: res.headers.get('client'),
-      expiry: res.headers.get('expiry'),
-      uid: res.headers.get('uid'),
-      accessToken: res.headers.get('access-token')
-    })
+    await Auth.setToken(data.token)
 
-    const creds = await Auth.getCredentials()
-    navigation.navigate('Home')
-  }
-
-  const signIn = async () => {
-    const res = await Client.auth.signIn(credentionals)
-    setUserId(res.headers.get('uid'))
-
-    await Auth.setCredentials({
-      client: res.headers.get('client'),
-      expiry: res.headers.get('expiry'),
-      uid: res.headers.get('uid'),
-      accessToken: res.headers.get('access-token')
-    })
-
-    const creds = await Auth.getCredentials()
     navigation.navigate('Home')
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
-      <TextInput
-        style={styles.input}
-        onChangeText={(value) => setCredentionals({ ...credentionals, email: value })}
-        value={credentionals.email}
-        placeholder="Email"
-        keyboardType="default"
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={(value) => setCredentionals({ ...credentionals, password: value })}
-        value={credentionals.password}
-        placeholder="Password"
-        secureTextEntry
-        keyboardType="default"
-      />
-      <Button title="Sign in" onPress={signIn} />
-      <Text>
+    <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View>
         <GoogleSigninButton
           style={{ width: 192, height: 48 }}
           size={GoogleSigninButton.Size.Wide}
@@ -100,18 +64,9 @@ function SignInScreen ({ navigation }) {
           onPress={GoogleAuth}
           // disabled={this.state.isSigninInProgress}
         />
-      </Text>
+      </View>
     </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10
-  }
-})
 
 export default SignInScreen
