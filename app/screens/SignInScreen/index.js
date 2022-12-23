@@ -11,7 +11,11 @@ import { UserContext } from '../../contexts/UserContext'
 
 import Auth from '../../storage/auth'
 
+import Loading from '../../components/Loading'
+
 function SignInScreen ({ navigation }) {
+  const [isLoading, setIsLoading] = useState(false)
+
   const { setUserId } = useContext(UserContext)
 
   useEffect(() => {
@@ -24,12 +28,16 @@ function SignInScreen ({ navigation }) {
 
   const GoogleAuth = async () => {
     try {
-      await GoogleSignin.hasPlayServices()
+      setIsLoading(true)
+
+      // await GoogleSignin.hasPlayServices() // only for Android
 
       const googleAuthResult = await GoogleSignin.signIn()
 
       await googleSignIn(googleAuthResult.idToken)
     } catch (error) {
+      setIsLoading(false)
+
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
         alert('User cancelled the login flow !')
@@ -53,6 +61,14 @@ function SignInScreen ({ navigation }) {
     await Auth.setToken(data.token)
 
     navigation.navigate('Home')
+  }
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Loading/>
+      </SafeAreaView>
+    )
   }
 
   return (

@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { View, Text } from 'react-native'
+import { SafeAreaView, Text } from 'react-native'
 import Client from '../../client'
 import { UserContext } from '../../contexts/UserContext'
+
+import Loading from '../../components/Loading'
 
 function ServerIsDownScreen ({ navigation }) {
   const [pong, setPong] = useState(false)
@@ -31,9 +33,10 @@ function ServerIsDownScreen ({ navigation }) {
   }, [pong])
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Server is down</Text>
-    </View>
+    <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text style={{ marginBottom: 10 }}>Trying to connect to the server</Text>
+      <Loading/>
+    </SafeAreaView>
   )
 }
 
