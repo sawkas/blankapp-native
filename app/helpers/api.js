@@ -35,6 +35,10 @@ const handle401 = () => {
   navigate('SignIn')
 }
 
+const handleNetworkRequestFailed = () => {
+  navigate('ServerIsDownScreen')
+}
+
 const makeRequestWithPromise = async (method, path, params) => {
   return new Promise(async function (resolve, reject) {
     try {
@@ -43,7 +47,8 @@ const makeRequestWithPromise = async (method, path, params) => {
 
       if (response.status == 401) {
         handle401()
-        reject({ type: 'error' })
+
+        reject({ type: 'error', reason: 'error' })
       } else if (response.status == 404) {
         reject({ type: 'error' })
       } else if (response.status == 500) {
@@ -51,10 +56,16 @@ const makeRequestWithPromise = async (method, path, params) => {
       } else {
         const data = await response.json()
 
-        resolve({ data, headers: response.headers, status: 'ok' })
+        resolve({ data, headers: response.headers })
       }
     } catch (error) {
-      reject({ type: 'error', ...error })
+      if (error.message === 'Network request failed') {
+        handleNetworkRequestFailed()
+
+        resolve({ data: { status: 'error' } })
+      } else {
+        reject({ type: 'error' })
+      }
     }
   })
 }

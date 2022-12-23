@@ -25,6 +25,7 @@ function SignInScreen ({ navigation }) {
   const GoogleAuth = async () => {
     try {
       await GoogleSignin.hasPlayServices()
+
       const googleAuthResult = await GoogleSignin.signIn()
 
       await googleSignIn(googleAuthResult.idToken)
