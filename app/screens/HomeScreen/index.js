@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { View, Text, Button, SafeAreaView } from 'react-native'
+import { UserContext } from '../../contexts/UserContext'
+import { Text, SafeAreaView, StyleSheet } from 'react-native'
 
 import Client from '../../client'
-import { UserContext } from '../../contexts/UserContext'
-import Auth from '../../storage/auth'
 import Loading from '../../components/Loading'
+import NavigationContainer from '../../components/NavigationContainer'
 
 function HomeScreen ({ navigation }) {
-  const { user, setUser, userId, setUserId } = useContext(UserContext)
+  const { user, setUser, userId } = useContext(UserContext)
 
   const [isLoading, setIsLoading] = useState(true)
 
@@ -24,12 +24,6 @@ function HomeScreen ({ navigation }) {
     fetchMe()
   }, [userId])
 
-  const signOut = async () => {
-    Auth.removeToken()
-
-    setUserId(null)
-  }
-
   if (isLoading) {
     return (
       <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -39,12 +33,18 @@ function HomeScreen ({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <NavigationContainer navigation={navigation} screenStyles={styles.container}>
       <Text>Home Screen</Text>
       <Text>Hello {user.full_name}</Text>
-      <Button title="Sign out" onPress={signOut} />
-    </SafeAreaView>
+    </NavigationContainer>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})
 
 export default HomeScreen

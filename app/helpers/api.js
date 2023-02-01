@@ -45,14 +45,14 @@ const makeRequestWithPromise = async (method, path, params) => {
       const authToken = await Auth.getToken()
       const response = await fetch(url(path, method, params), requestOptions(method, params, authToken))
 
-      if (response.status == 401) {
+      if (response.status === 401) {
         handle401()
 
-        reject({ type: 'error', reason: 'error' })
-      } else if (response.status == 404) {
-        reject({ type: 'error' })
-      } else if (response.status == 500) {
-        reject({ type: 'error' })
+        // reject({ type: 'error', reason: 'error' })
+      } else if (response.status === 404) {
+        // reject({ type: 'error' })
+      } else if (response.status === 500) {
+        // reject({ type: 'error' })
       } else {
         const data = await response.json()
 
@@ -64,7 +64,7 @@ const makeRequestWithPromise = async (method, path, params) => {
 
         resolve({ data: { status: 'error' } })
       } else {
-        reject({ type: 'error' })
+        // reject({ type: 'error' })
       }
     }
   })
