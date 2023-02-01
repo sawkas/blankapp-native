@@ -1,40 +1,41 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useUser, setUser } from '../../contexts/UserContext'
 import { GOOGLE_WEB_CLIENT_ID, GOOGLE_IOS_CLIENT_ID } from '@env'
-import {
-  Button, SafeAreaView, View, StyleSheet, TextInput, Text
-} from 'react-native'
+import { SafeAreaView, View } from 'react-native'
 
 import { GoogleSignin, statusCodes, GoogleSigninButton } from '@react-native-google-signin/google-signin'
+
 import Client from '../../client'
-
-import { UserContext } from '../../contexts/UserContext'
-
 import Auth from '../../storage/auth'
 
 import Loading from '../../components/Loading'
 
 function SignInScreen ({ navigation }) {
+  const [{ user }, dispatch] = useUser()
   const [isLoading, setIsLoading] = useState(false)
 
-  const { setUserId } = useContext(UserContext)
-
   useEffect(() => {
+    // if (user) {
+    //   navigation.navigate('Home')
+    //   return
+    // }
+
     GoogleSignin.configure({
       webClientId: GOOGLE_WEB_CLIENT_ID,
       iosClientId: GOOGLE_IOS_CLIENT_ID,
       offlineAccess: true
     })
-  }, [])
+  }, [user])
 
   const GoogleAuth = async () => {
     try {
       setIsLoading(true)
 
-      // await GoogleSignin.hasPlayServices() // only for Android
+      await GoogleSignin.hasPlayServices() // only for Android
 
       const googleAuthResult = await GoogleSignin.signIn()
 
-      await googleSignIn(googleAuthResult.idToken)
+      await signIn(googleAuthResult.idToken)
     } catch (error) {
       setIsLoading(false)
 
@@ -53,12 +54,14 @@ function SignInScreen ({ navigation }) {
     }
   }
 
-  const googleSignIn = async (idToken) => {
-    const { data } = await Client.auth.googleSignIn({ id_token: idToken })
+  const signIn = async (idToken) => {
+    // TODO: probably one request in enough
+    const authResponse = await Client.auth.googleSignIn({ id_token: idToken })
+    await Auth.setToken(authResponse.data.token)
 
-    setUserId(data.user_id)
-
-    await Auth.setToken(data.token)
+    const meResponse = await Client.me.index()
+    setUser(dispatch, meResponse.data)
+    setIsLoading(false)
 
     navigation.navigate('Home')
   }
@@ -79,7 +82,6 @@ function SignInScreen ({ navigation }) {
           size={GoogleSigninButton.Size.Wide}
           color={GoogleSigninButton.Color.Dark}
           onPress={GoogleAuth}
-          // disabled={this.state.isSigninInProgress}
         />
       </View>
     </SafeAreaView>

@@ -1,36 +1,10 @@
-import React, { useEffect, useState, useContext } from 'react'
-import { UserContext } from '../../contexts/UserContext'
-import { Text, SafeAreaView, StyleSheet } from 'react-native'
-
-import Client from '../../client'
-import Loading from '../../components/Loading'
+import React from 'react'
+import { useUser } from '../../contexts/UserContext'
+import { Text, StyleSheet } from 'react-native'
 import NavigationContainer from '../../components/NavigationContainer'
 
 function HomeScreen ({ navigation }) {
-  const { user, setUser, userId } = useContext(UserContext)
-
-  const [isLoading, setIsLoading] = useState(true)
-
-  const fetchMe = async () => {
-    setIsLoading(true)
-
-    const { data } = await Client.me.index()
-
-    setUser(data)
-    setIsLoading(false)
-  }
-
-  useEffect(() => {
-    fetchMe()
-  }, [userId])
-
-  if (isLoading) {
-    return (
-      <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Loading/>
-      </SafeAreaView>
-    )
-  }
+  const [{ user }] = useUser()
 
   return (
     <NavigationContainer navigation={navigation} screenStyles={styles.container}>

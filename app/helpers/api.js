@@ -36,7 +36,7 @@ const handle401 = () => {
 }
 
 const handleNetworkRequestFailed = () => {
-  navigate('ServerIsDownScreen')
+  // navigate('ServerIsDownScreen')
 }
 
 const makeRequestWithPromise = async (method, path, params) => {
