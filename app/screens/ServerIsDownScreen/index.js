@@ -1,29 +1,28 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView, Text } from 'react-native'
 import Client from '../../client'
-import { UserContext } from '../../contexts/UserContext'
+import { useUser } from '../../contexts/UserContext'
 
 import Loading from '../../components/Loading'
 
 function ServerIsDownScreen ({ navigation }) {
+  const [{ user }] = useUser()
   const [pong, setPong] = useState(false)
-
-  const { setUserId } = useContext(UserContext)
 
   const ping = async () => {
     console.log('ping!')
 
-    const { data } = await Client.ping.index()
+    const { status } = await Client.ping.index()
 
-    if (data.status === 'ok') { setPong(true) }
+    if (status === 'ok') { setPong(true) }
   }
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (pong === true) {
-        setUserId(0) // to refetch me
+        navigation.navigate(user ? 'Home' : 'SignIn')
 
-        navigation.navigate('Home')
+        return
       }
 
       ping()

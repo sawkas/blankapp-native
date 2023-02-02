@@ -11,59 +11,44 @@ import Auth from '../../storage/auth'
 import Loading from '../../components/Loading'
 
 function SignInScreen ({ navigation }) {
-  const [{ user }, dispatch] = useUser()
+  const [, dispatch] = useUser()
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    // if (user) {
-    //   navigation.navigate('Home')
-    //   return
-    // }
-
     GoogleSignin.configure({
       webClientId: GOOGLE_WEB_CLIENT_ID,
       iosClientId: GOOGLE_IOS_CLIENT_ID,
       offlineAccess: true
     })
-  }, [user])
+  }, [])
 
   const GoogleAuth = async () => {
     try {
       setIsLoading(true)
 
-      await GoogleSignin.hasPlayServices() // only for Android
-
+      // await GoogleSignin.hasPlayServices() // only for Android
       const googleAuthResult = await GoogleSignin.signIn()
+      // TODO: probably one request to API is enough
+      const authResponse = await Client.auth.googleSignIn({ id_token: googleAuthResult.idToken })
 
-      await signIn(googleAuthResult.idToken)
+      await Auth.setToken(authResponse.token)
+
+      setIsLoading(false)
+
+      setUser(dispatch, authResponse.user)
     } catch (error) {
       setIsLoading(false)
 
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-        // user cancelled the login flow
         alert('User cancelled the login flow !')
       } else if (error.code === statusCodes.IN_PROGRESS) {
         alert('Signin in progress')
-        // operation (f.e. sign in) is in progress already
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
         alert('Google play services not available or outdated !')
-        // play services not available or outdated
       } else {
         console.log(error)
       }
     }
-  }
-
-  const signIn = async (idToken) => {
-    // TODO: probably one request in enough
-    const authResponse = await Client.auth.googleSignIn({ id_token: idToken })
-    await Auth.setToken(authResponse.data.token)
-
-    const meResponse = await Client.me.index()
-    setUser(dispatch, meResponse.data)
-    setIsLoading(false)
-
-    navigation.navigate('Home')
   }
 
   if (isLoading) {

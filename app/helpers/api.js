@@ -32,11 +32,12 @@ const requestOptions = (method, params, authToken) => {
 }
 
 const handle401 = () => {
-  navigate('SignIn')
+  // navigate('SignIn')
+  // TODO: reset user
 }
 
 const handleNetworkRequestFailed = () => {
-  // navigate('ServerIsDownScreen')
+  navigate('ServerIsDownScreen')
 }
 
 const makeRequestWithPromise = async (method, path, params) => {
@@ -56,13 +57,13 @@ const makeRequestWithPromise = async (method, path, params) => {
       } else {
         const data = await response.json()
 
-        resolve({ data, headers: response.headers })
+        resolve(data)
       }
     } catch (error) {
       if (error.message === 'Network request failed') {
         handleNetworkRequestFailed()
 
-        resolve({ data: { status: 'error' } })
+        resolve({ status: 'error' })
       } else {
         // reject({ type: 'error' })
       }

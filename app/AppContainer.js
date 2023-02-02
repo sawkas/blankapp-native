@@ -11,19 +11,36 @@ import NewScamScreen from './screens/NewScamScreen'
 import FreindsScreen from './screens/FreindsScreen'
 
 import ServerIsDownScreen from './screens/ServerIsDownScreen'
+import { useUser } from './contexts/UserContext'
 
 const Stack = createNativeStackNavigator()
 
+function notAuthenticatedScreens () {
+  return (
+    <>
+      <Stack.Screen name="SignIn" component={SignInScreen} />
+    </>
+  )
+}
+
+function authenticatedScreens () {
+  return (
+    <>
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="NewScam" component={NewScamScreen} />
+      <Stack.Screen name="Freinds" component={FreindsScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+    </>
+  )
+}
+
 function AppContainer () {
+  const [{ user }] = useUser()
+
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator initialRouteName="SignIn" screenOptions={{ headerShown: false, animation: 'none' }}>
-        <Stack.Screen name="SignIn" component={SignInScreen} />
-
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="NewScam" component={NewScamScreen} />
-        <Stack.Screen name="Freinds" component={FreindsScreen} />
-        <Stack.Screen name="Profile" component={ProfileScreen} />
+        {user ? authenticatedScreens() : notAuthenticatedScreens()}
 
         <Stack.Screen name="ServerIsDownScreen" component={ServerIsDownScreen} />
       </Stack.Navigator>
