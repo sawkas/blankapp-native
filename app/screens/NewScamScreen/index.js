@@ -1,12 +1,12 @@
 import React from 'react'
 import { Text, StyleSheet } from 'react-native'
-import NavigationContainer from '../../components/NavigationContainer'
+import BaseLayout from '../../components/BaseLayout'
 
 function NewScam ({ navigation }) {
   return (
-    <NavigationContainer navigation={navigation} screenStyles={styles.container}>
+    <BaseLayout screenStyles={styles.container}>
       <Text>New Scam</Text>
-    </NavigationContainer>
+    </BaseLayout>
   )
 }
 

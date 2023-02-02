@@ -1,16 +1,16 @@
 import React from 'react'
 import { useUser } from '../../contexts/UserContext'
 import { Text, StyleSheet } from 'react-native'
-import NavigationContainer from '../../components/NavigationContainer'
+import BaseLayout from '../../components/BaseLayout'
 
 function HomeScreen ({ navigation }) {
   const [{ user }] = useUser()
 
   return (
-    <NavigationContainer navigation={navigation} screenStyles={styles.container}>
+    <BaseLayout screenStyles={styles.container}>
       <Text>Home Screen</Text>
       <Text>Hello {user.full_name}</Text>
-    </NavigationContainer>
+    </BaseLayout>
   )
 }
 

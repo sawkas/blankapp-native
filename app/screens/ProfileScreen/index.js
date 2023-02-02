@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { useUser, removeUser } from '../../contexts/UserContext'
 import { View, Text, Button, Image, StyleSheet, SafeAreaView } from 'react-native'
-import NavigationContainer from '../../components/NavigationContainer'
+import BaseLayout from '../../components/BaseLayout'
 import Auth from '../../storage/auth'
 import Loading from '../../components/Loading'
 
@@ -26,13 +26,13 @@ function ProfileScreen ({ navigation }) {
   }
 
   return (
-    <NavigationContainer navigation={navigation}>
+    <BaseLayout screenStyles={styles.container}>
       <View style={styles.profile}>
         <Text style={styles.fullName}>{user.full_name}</Text>
         <Image style={styles.avatar} source={{ uri: user.avatar_url }} />
       </View>
       <Button title="Sign out" onPress={signOut} styles={styles.signOut}/>
-    </NavigationContainer>
+    </BaseLayout>
   )
 }
 
