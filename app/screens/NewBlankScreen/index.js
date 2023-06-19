@@ -2,10 +2,10 @@ import React from 'react'
 import { Text, StyleSheet } from 'react-native'
 import BaseLayout from '../../components/BaseLayout'
 
-function NewScam ({ navigation }) {
+function NewBlankScreen ({ navigation }) {
   return (
     <BaseLayout screenStyles={styles.container}>
-      <Text>New Scam</Text>
+      <Text>New Blank</Text>
     </BaseLayout>
   )
 }
@@ -17,4 +17,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default NewScam
+export default NewBlankScreen

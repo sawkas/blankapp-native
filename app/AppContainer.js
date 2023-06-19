@@ -8,7 +8,7 @@ import { navigationRef } from './helpers/navigation'
 import HomeScreen from './screens/HomeScreen'
 import SignInScreen from './screens/SignInScreen'
 import ProfileScreen from './screens/ProfileScreen'
-import NewScamScreen from './screens/NewScamScreen'
+import NewBlankScreen from './screens/NewBlankScreen'
 import FreindsScreen from './screens/FreindsScreen'
 
 import ServerIsDownScreen from './screens/ServerIsDownScreen'
@@ -31,7 +31,7 @@ function BottomTabs () {
           <HomeSvg width={size} height={size} fill={color} stroke={color} />
         )
       }}/>
-      <Tab.Screen name="NewScam" component={NewScamScreen} options={{
+      <Tab.Screen name="NewBlank" component={NewBlankScreen} options={{
         tabBarLabel: 'Home',
         tabBarIcon: ({ color, size }) => (
           <PlusSvg width={size} height={size} fill={color} stroke={color} />

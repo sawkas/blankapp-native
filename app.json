@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "scamapp-native",
-    "slug": "scamapp-native",
+    "name": "blankapp-native",
+    "slug": "blankapp-native",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,7 +19,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.scamapp-native",
+      "bundleIdentifier": "com.anonymous.blankapp-native",
     },
     "android": {
       "adaptiveIcon": {
